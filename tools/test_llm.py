@@ -3,6 +3,9 @@
 
 用法：python tools/test_llm.py
 不依赖真实 API Key，也不会联网。
+
+注意：本脚本只读配置、不写配置。如果你的脚本要改 %APPDATA%/DafeiyuPet/config.json
+（比如模拟点「保存」），务必先备份、结束时还原，否则会把用户的真实 Key 冲掉。
 """
 from __future__ import annotations
 
@@ -16,6 +19,38 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import llm  # noqa: E402
+
+
+class ConfigSandbox:
+    """临时替换配置文件路径，测试怎么写都不会碰到真实配置。
+
+        with ConfigSandbox():
+            ...  # 这里的 config.CONFIG_PATH 指向临时文件
+    """
+
+    def __enter__(self):
+        import shutil
+        import tempfile
+        from app import config
+
+        self._tmpdir = tempfile.mkdtemp(prefix="dafeiyu_cfg_")
+        self._orig_cfg = config.CONFIG_PATH
+        self._orig_hist = config.HISTORY_PATH
+        if os.path.exists(config.CONFIG_PATH):
+            shutil.copy2(config.CONFIG_PATH, os.path.join(self._tmpdir, "config.json"))
+        config.CONFIG_PATH = os.path.join(self._tmpdir, "config.json")
+        config.HISTORY_PATH = os.path.join(self._tmpdir, "chat_history.json")
+        return self
+
+    def __exit__(self, *exc):
+        import shutil
+        from app import config
+
+        config.CONFIG_PATH = self._orig_cfg
+        config.HISTORY_PATH = self._orig_hist
+        shutil.rmtree(self._tmpdir, ignore_errors=True)
+        return False
+
 
 PORT = 18765
 CALLS: list[dict] = []
@@ -105,6 +140,16 @@ def wait(pred, timeout=8.0):
 
 
 def main() -> int:
+    # Chat 会读写聊天历史文件，用沙盒挡住，别动用户真实记录
+    return _run_in_sandbox()
+
+
+def _run_in_sandbox() -> int:
+    with ConfigSandbox():
+        return _run()
+
+
+def _run() -> int:
     srv = start()
     base = f"http://127.0.0.1:{PORT}"
     results: list[tuple[str, bool, str]] = []

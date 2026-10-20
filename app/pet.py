@@ -971,11 +971,16 @@ class PetWindow(QWidget):
 
     def _about(self) -> None:
         fest = f"\n今天是「{self._festival}」" if self._festival else ""
+        cur = llm_from_cfg(self.cfg)
+        target = cur["model"] if cur["model"] else "未配置"
         QMessageBox.information(
             self, "关于大肥鱼桌宠",
-            "大肥鱼桌宠 v1.0\n\n"
+            "大肥鱼桌宠 v1.1\n\n"
             "一只陪你摸鱼的 DeepSeek 鲸鱼娘。\n"
             "100 段透明动画 · 28 个招牌互动 · 电脑体检 · AI 聊天\n\n"
+            f"当前模型：{target}\n"
+            f"接口地址：{cur['base_url'] or '（未配置）'}\n\n"
+            "AI 支持任何兼容 OpenAI 接口的服务，右键 → 设置 → 模型设置。\n"
             f"动作素材来自开源项目 dsh-pet（作者 PC2005-cloud），非商用。{fest}")
 
     def quit_app(self) -> None:
