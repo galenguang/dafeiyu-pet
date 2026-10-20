@@ -58,7 +58,12 @@ DEFAULT_CONFIG = {
     "x": None,
     "y": None,
     "volume": 0.8,
-    "ds_api_key": "",
+    # ---- 大模型（任何兼容 OpenAI 接口的服务都能用）----
+    "llm_preset": "DeepSeek",
+    "llm_base_url": "https://api.deepseek.com/v1",
+    "llm_api_key": "",
+    "llm_model": "deepseek-chat",
+    "llm_timeout": 30,
     "city": "汕头",
     "idle_actions": True,      # 空闲时自动表演
     "idle_interval": 45,       # 秒，两次自动表演之间的基础间隔
@@ -66,6 +71,11 @@ DEFAULT_CONFIG = {
     "health_alerts": True,     # 指标超阈值时冒泡提醒
     "show_fps": False,
     "first_run": True,
+}
+
+# 老版本的配置项，读进来时迁移掉
+_LEGACY_KEYS = {
+    "ds_api_key": "llm_api_key",
 }
 
 
@@ -78,6 +88,19 @@ def load_config() -> dict:
             cfg.update(saved)
     except Exception:
         pass
+
+    # 老配置迁移：ds_api_key -> llm_api_key（只在新的还是空的时候迁）
+    for old, new in _LEGACY_KEYS.items():
+        if old in cfg:
+            if not cfg.get(new):
+                cfg[new] = cfg[old]
+            cfg.pop(old, None)
+
+    # base_url 存的一律是规范化后的形式，这里兜一下空值
+    if not cfg.get("llm_base_url"):
+        cfg["llm_base_url"] = DEFAULT_CONFIG["llm_base_url"]
+    if not cfg.get("llm_model"):
+        cfg["llm_model"] = DEFAULT_CONFIG["llm_model"]
     return cfg
 
 

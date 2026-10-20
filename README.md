@@ -5,7 +5,7 @@
 - **100 段透明动画**（VP9 alpha 视频，640×360 / 24fps）
 - **28 个招牌互动** + 完整动作点播
 - **电脑体检**：CPU / 内存 / 显卡 / 磁盘 / 网络 / 电池 / 进程
-- **AI 聊天**：DeepSeek，能查余额、报天气
+- **AI 聊天**：任意兼容 OpenAI 接口的模型 —— DeepSeek / OpenAI / 通义 / Kimi / 智谱 / Ollama 本地都能接
 - **节日自动感知**：农历节日用预生成表，当天会主动过节
 
 **仓库**：[Gitee](https://gitee.com/albot-crane/dafeiyu-pet) · [GitHub](https://github.com/star211199/dafeiyu-pet)
@@ -43,7 +43,7 @@
 | **左键单击** | 随机一个点击反应动画 + 气泡台词 |
 | **左键双击** | 打开互动面板（28 个招牌互动 + 100 个动作分类） |
 | **按住拖拽** | 拖着走，松手会「啪叽」落地，活动范围跟着落点走 |
-| **右键** | 完整菜单（动作点播 / 体检 / 聊天 / 模式 / 大小 / 设置） |
+| 右键 | 完整菜单（动作点播 / 体检 / 聊天 / 模型设置 / 模式 / 大小 / 设置） |
 | **托盘图标** | 单击显示隐藏，右键同款菜单 |
 
 ### 弹出窗口怎么关、怎么拖
@@ -117,13 +117,66 @@
 
 ## AI 聊天 / 天气 / 余额
 
-右键 → 设置 → 填 DeepSeek Key（[platform.deepseek.com](https://platform.deepseek.com) 申请）。
+**不绑定厂商**：任何兼容 OpenAI `chat/completions` 接口的服务都能接，只要三样东西 ——
+`base_url`、`api_key`、`model`。
 
-- **聊天**：右键「跟她说句话」，或菜单里的入口；保留最近 40 条上下文
-- **余额**：查 DeepSeek 账户余额
+右键 → 设置 → **🤖 模型设置**，面板里填这三格，点「测试连接」验证，绿字通了再保存。
+
+<p align="center">
+  <img src="docs/screenshots/llm_settings.png" width="360" alt="模型设置">
+</p>
+
+内置预设（选完仍可随手改）：
+
+| 服务商 | Base URL | 模型名示例 |
+|--------|----------|-----------|
+| DeepSeek | `https://api.deepseek.com/v1` | `deepseek-chat` |
+| OpenAI | `https://api.openai.com/v1` | `gpt-4o-mini` |
+| 通义千问 | `https://dashscope.aliyuncs.com/compatible-mode/v1` | `qwen-plus` |
+| Kimi | `https://api.moonshot.cn/v1` | `moonshot-v1-8k` |
+| 智谱 GLM | `https://open.bigmodel.cn/api/paas/v4` | `glm-4-flash` |
+| 硅基流动 | `https://api.siliconflow.cn/v1` | `Qwen/Qwen2.5-7B-Instruct` |
+| Ollama（本地） | `http://localhost:11434/v1` | `qwen2.5:7b` |
+| LM Studio（本地） | `http://localhost:1234/v1` | 随便填 |
+| vLLM / 自建 | `http://localhost:8000/v1` | 看你的部署 |
+
+此外任何 one-api / new-api 之类的中转站，填它给的那条地址就行。
+
+**Base URL 的容错**：这些写法都认，会自动补成标准形式
+
+```
+api.deepseek.com                      -> https://api.deepseek.com/v1
+https://api.openai.com                -> https://api.openai.com/v1
+https://api.openai.com/v1/            -> https://api.openai.com/v1
+https://api.openai.com/v1/chat/completions -> https://api.openai.com/v1
+localhost:11434                       -> http://localhost:11434/v1   （本机自动用 http）
+```
+
+**本地模型不用 Key**：地址是 `localhost` / `127.0.0.1` / 局域网段时，Key 可以留空。
+
+**报错会翻译成人话**，不用自己对着状态码猜：
+
+| 情况 | 冒泡说 |
+|------|--------|
+| 401 | Key 不对或没权限 |
+| 404 | 接口地址不对，检查 Base URL |
+| 400 + model not exist | 模型名不对，检查 model |
+| 429 | 请求太频繁，等下再说 |
+| 5xx | 服务端抽风了（503） |
+| 返回格式不是 OpenAI | 返回格式看不懂，确认是 OpenAI 接口 |
+
+**模型兼容性**：有些推理模型不收 `temperature` / `max_tokens`。
+遇到 400 报这两个参数时，会自动去掉 `temperature`、把 `max_tokens` 换成
+`max_completion_tokens` 重试一次，不用手动改。
+
+其他：
+
+- **聊天**：右键「跟她说句话」；保留最近 40 条上下文；超 40 字自动截断成一句气泡
+- **余额**：只有 DeepSeek 有这套接口，别的厂商会直接说「这个接口查不了余额」
 - **天气**：`wttr.in`，城市在设置里改
 
-Key 存在 `%APPDATA%\DafeiyuPet\config.json`，不会进仓库。
+Key 存在 `%APPDATA%\DafeiyuPet\config.json`，不会进仓库（`.gitignore` 已排除）。
+老版本的 `ds_api_key` 会自动迁移到新的 `llm_api_key`，不用重新填。
 
 ---
 
@@ -183,6 +236,7 @@ python -m venv .venv
 | `大肥鱼桌宠.exe --selftest` | 素材齐全性、解码、系统监控三项检查，结果写 `%TEMP%\dafeiyu_selftest.txt` |
 | `大肥鱼桌宠.exe --probe` | 起窗口跑 3 秒，把几何/DPI/监控/自截图写到 `%TEMP%\dafeiyu_probe\` |
 | `tools\click.py click\|dblclick\|rclick\|drag` | 用 Win32 消息模拟鼠标，做端到端交互测试 |
+| `python tools\test_llm.py` | 起本地假 OpenAI 服务，跑完对话 / 各类报错 / 参数降级 / 余额共 14 项断言 |
 | `tools\gdi_shot.py` | 纯 GDI 截屏（不建 QApplication，不会抢焦点导致面板自动隐藏） |
 | `tools\wins.py` | 列出桌宠窗口的位置/尺寸/可见性 |
 
@@ -226,8 +280,8 @@ dafeiyu_pet/
 │   ├── sysmon.py           系统指标采集 + 阈值告警
 │   ├── festival.py         公历 + 农历节日判定
 │   ├── lines.py            台词库
-│   ├── llm.py              DeepSeek 对话 / 余额 / 天气
-│   └── ui/                 互动面板、体检面板、聊天输入框
+│   ├── llm.py              OpenAI 兼容接口：对话 / 余额 / 天气（不绑定厂商）
+│   └── ui/                 互动面板、体检面板、模型设置、聊天输入框
 ├── assets/
 │   ├── webm/               100 段透明动画
 │   └── icon.png / .ico

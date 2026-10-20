@@ -18,14 +18,15 @@ from PySide6.QtGui import (QAction, QColor, QFont, QFontMetrics, QIcon, QPainter
 from PySide6.QtWidgets import (QApplication, QDialog, QInputDialog, QLineEdit,
                                QMenu, QMessageBox, QSystemTrayIcon, QWidget)
 
-from . import config, festival, lines
+from . import config, festival, lines, llm
 from .actions import ACTIONS, CANVAS_H, CANVAS_W, FEATURES, FPS, by_cat, icon_of
 from .clip import ClipCache
 from .effects import EffectLayer
-from .llm import Chat, query_balance, query_weather
+from .llm import Chat, llm_from_cfg, query_balance, query_weather, ready
 from .sysmon import Monitor, check_alerts
 from .ui.chat import ChatBox
 from .ui.health import HealthPanel
+from .ui.llm_settings import LLMSettings
 from .ui.panel import ActionPanel
 
 BUBBLE_H = 58
@@ -120,6 +121,8 @@ class PetWindow(QWidget):
         self.chatbox = ChatBox()
         self.chatbox.submitted.connect(self._on_chat_text)
         self.health = HealthPanel(self._monitor)
+        self.llm_ui = LLMSettings(self.cfg)
+        self.llm_ui.saved.connect(self._on_llm_saved)
 
         self._click_timer = QTimer(self)
         self._click_timer.setSingleShot(True)
@@ -480,20 +483,23 @@ class PetWindow(QWidget):
             self.say("今天不是节日，那我自己过")
 
     def _do_balance(self) -> None:
-        key = self.cfg.get("ds_api_key", "")
+        cur = llm_from_cfg(self.cfg)
         self._play_from_cat("balance")
-        if not key:
+        if not cur.get("api_key"):
             self.say("没设 Key，只能看看我的空钱包了")
+            return
+        if not llm.is_deepseek(cur["base_url"]):
+            self.say("这个接口查不了余额，只有 DeepSeek 有")
             return
         self.say("让我查查余额…")
 
         def ok(text: str, available: bool) -> None:
-            self._say_queue.append((f"DeepSeek 余额 {text}", False))
+            self._say_queue.append((f"余额 {text}", False))
 
         def err(msg: str) -> None:
             self._say_queue.append((msg, False))
 
-        query_balance(key, ok, err)
+        query_balance(cur, ok, err)
 
     def _do_mooncake_token(self) -> None:
         tokens = random.randint(800, 64000)
@@ -777,8 +783,8 @@ class PetWindow(QWidget):
             a.triggered.connect(lambda _=False, v=val: self.set_scale(v))
 
         set_menu = m.addMenu("⚙️ 设置")
-        ka = set_menu.addAction("DeepSeek Key…")
-        ka.triggered.connect(self._set_key)
+        ka = set_menu.addAction("🤖 模型设置…")
+        ka.triggered.connect(self._set_llm)
         ca = set_menu.addAction("设置城市…")
         ca.triggered.connect(self._set_city)
         set_menu.addSeparator()
@@ -812,8 +818,10 @@ class PetWindow(QWidget):
 
     # ================= 功能 =================
     def _open_chat(self) -> None:
-        if not self.cfg.get("ds_api_key"):
-            self.say("先右键设置 DeepSeek Key 才能聊天哦")
+        ok, why = ready(llm_from_cfg(self.cfg))
+        if not ok:
+            self.say(why)
+            QTimer.singleShot(600, lambda: self.llm_ui.popup_near(self))
             return
         self.chatbox.popup_near(self)
 
@@ -826,7 +834,7 @@ class PetWindow(QWidget):
         def fail(msg: str) -> None:
             self._say_queue.append((msg, False))
 
-        self._chat.ask(self.cfg.get("ds_api_key", ""), text, reply, fail)
+        self._chat.ask(llm_from_cfg(self.cfg), text, reply, fail)
 
     def _do_weather(self) -> None:
         city = self.cfg.get("city", "汕头")
@@ -840,14 +848,14 @@ class PetWindow(QWidget):
 
         query_weather(city, ok, err)
 
-    def _set_key(self) -> None:
-        key, ok = QInputDialog.getText(
-            self, "DeepSeek Key", "粘贴你的 API Key（platform.deepseek.com）:",
-            QLineEdit.EchoMode.Password, self.cfg.get("ds_api_key", ""))
-        if ok:
-            self.cfg["ds_api_key"] = key.strip()
-            config.save_config(self.cfg)
-            self.say("Key 已保存" if key.strip() else "Key 清空了")
+    def _set_llm(self) -> None:
+        self.llm_ui.cfg = self.cfg
+        self.llm_ui.popup_near(self)
+
+    def _on_llm_saved(self, cfg: dict) -> None:
+        self.cfg = cfg
+        cur = llm_from_cfg(cfg)
+        self.say(f"换好模型了：{cur['model']}", duration=3.6)
 
     def _set_city(self) -> None:
         city, ok = QInputDialog.getText(
