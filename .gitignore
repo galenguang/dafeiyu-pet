@@ -1,0 +1,40 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# --- 打包产物 ---
+build/
+build_*/
+dist/
+dist_*/
+release/
+*.spec.bak
+
+# --- 运行时/调试产物 ---
+*.log
+error.log
+preview/
+tools/__pycache__/
+*.tmp
+*.bak
+
+# --- 素材源与临时目录 ---
+ref_dafeiyu/
+video/
+
+# --- 编辑器 / 系统 ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- 本地配置（API Key 等，绝不入库） ---
+config.json
+.env
+.env.*
