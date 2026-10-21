@@ -18,8 +18,8 @@
 
 | 下载 | 说明 |
 |------|------|
-| [GitHub Releases](https://github.com/star211199/dafeiyu-pet/releases/tag/v1.1) | 一个 zip 搞定，115MB |
-| [Gitee Releases](https://gitee.com/albot-crane/dafeiyu-pet/releases/tag/v1.1) | 拆成 `part1` / `part2` 两卷（Gitee 附件单文件限 100MB），**两个都下载，解压到同一个文件夹** |
+| [GitHub Releases](https://github.com/star211199/dafeiyu-pet/releases/tag/v2.0) | 一个 zip 搞定，125MB |
+| [Gitee Releases](https://gitee.com/albot-crane/dafeiyu-pet/releases/tag/v2.0) | 拆成 `part1` / `part2` 两卷（Gitee 附件单文件限 100MB），**两个都下载，解压到同一个文件夹** |
 
 ---
 
@@ -317,12 +317,14 @@ python -m venv .venv
 
 产物在 `dist\大肥鱼桌宠\`，整个文件夹一起拷给别人即可，双击就能用，不需要装 Python。
 
-**成品（211MB，含 100 段动画素材）不打进 git 仓库**，避免 clone 变慢。现成 exe 走 Releases：
+**成品（235MB，含 100 段动画素材）不打进 git 仓库**，避免 clone 变慢。现成 exe 走 Releases：
 
-- **GitHub**：`dafeiyu-pet-v1.1-win64.zip`，115MB，解压双击 `大肥鱼桌宠.exe`
-- **Gitee**：`part1.zip`（60MB）+ `part2.zip`（55MB），两个都要下，**都解压到同一个文件夹**（Windows 会提示「合并文件夹」，选是），再双击 `大肥鱼桌宠.exe`
+- **GitHub**：`dafeiyu-pet-v2.0-win64.zip`，125MB，解压双击 `大肥鱼桌宠.exe`
+- **Gitee**：`dafeiyu-pet-v2.0-win64-part1.zip`（62.6MB）+ `-part2.zip`（62.6MB），两个都要下，**都解压到同一个文件夹**（Windows 会提示「合并文件夹」，选是），再双击 `大肥鱼桌宠.exe`
 
-> Gitee 的 Release 附件单文件上限 100MB，所以拆了卷；两卷内容不重叠，合起来就是完整的 `大肥鱼桌宠/` 目录。
+> Gitee 的 Release 附件单文件上限 100MB，所以拆了卷。两卷都是**能独立解压的普通 zip**，
+> 不是二进制分卷，不用敲 `copy /b` 合并；两卷文件不重叠，合起来就是完整的 `大肥鱼桌宠/` 目录。
+> 只解压 part1 是跑不起来的，两个都要。
 
 > 用目录形式而不是 `--onefile`：素材有 50MB，单文件每次启动都要解压一遍，会明显变慢。
 > 杀毒软件可能对 PyInstaller 产物误报，加信任即可。
