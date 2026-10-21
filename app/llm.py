@@ -257,8 +257,14 @@ class Chat:
         self._save()
 
     # ---------- 对话 ----------
-    def ask(self, llm: dict, text: str, on_reply, on_error) -> None:
-        """on_reply(str) / on_error(str) 会在后台线程里被调用。"""
+    def ask(self, llm: dict, text: str, on_reply, on_error,
+            memory: str = "") -> None:
+        """on_reply(str) / on_error(str) 会在后台线程里被调用。
+
+        ``memory`` 是记忆层拼好的背景资料，**单独作为一条 system 消息**放在
+        SYSTEM_PROMPT 之后、历史之前。不能拼进 user 消息里——那样模型会把它
+        当成主人说的话，转头就复述出来。
+        """
         if self.busy:
             on_error("上一句还没回完呢")
             return
@@ -269,6 +275,8 @@ class Chat:
         self.busy = True
 
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        if memory:
+            messages.append({"role": "system", "content": memory})
         messages.extend(self.history[-MAX_HISTORY:])
         messages.append({"role": "user", "content": text})
 

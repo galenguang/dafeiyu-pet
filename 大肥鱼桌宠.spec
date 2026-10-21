@@ -36,7 +36,19 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=datas,
-    hiddenimports=["av", "psutil", "pynvml"],
+    hiddenimports=["av", "psutil", "pynvml",
+                   # app.memory 的 __getattr__ 是延迟导入，PyInstaller 静态分析看不到
+                   "app.memory.core", "app.memory.store", "app.memory.schema",
+                   "app.memory.rules", "app.memory.extract", "app.memory.behavior",
+                   "app.memory.recall", "app.memory.voice",
+                   "app.ui.memory",
+                   # app.pet 里 agent 那一整段是 try/except 包着的延迟导入，
+                   # 静态分析同样看不到；漏一个就会"打包出来点菜单没反应"
+                   "app.agent.protocol", "app.agent.prompts", "app.agent.llm",
+                   "app.agent.sandbox", "app.agent.tools", "app.agent.win32",
+                   "app.agent.gate", "app.agent.runner", "app.agent.todo",
+                   "app.agent.stall", "app.agent.context", "app.agent.journal",
+                   "app.ui.confirm", "app.ui.agent_panel", "app.ui.agent_bridge"],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

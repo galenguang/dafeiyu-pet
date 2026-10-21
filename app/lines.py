@@ -3,10 +3,19 @@
 
 风格：贱兮兮但可爱，摸鱼搭子人设。带一点 DeepSeek 鲸鱼娘社区梗，
 但不依赖梗也能看懂。
+
+``pick`` / ``for_action`` 支持可选的 ``ctx``（``memory.voice.Ctx``）。传了就
+先问一句"有没有基于记忆的话想说"，没有就照旧从原池里抽；不传则**完全走旧
+逻辑**——现有 40+ 处调用一个字都不用改。
 """
 from __future__ import annotations
 
 import random
+
+try:                                    # 记忆模块缺失时台词库照常工作
+    from .memory import voice as _voice
+except Exception:                       # pragma: no cover
+    _voice = None
 
 # ---------------- 通用 ----------------
 GREETINGS = [
@@ -212,8 +221,19 @@ FESTIVAL_LINES = {
 }
 
 
-def pick(lines: list[str], last: str | None = None) -> str:
-    """随机取一句，尽量不重复上一句。"""
+def pick(lines: list[str], last: str | None = None, ctx=None) -> str:
+    """随机取一句，尽量不重复上一句。
+
+    ``ctx`` 非空时先问记忆层有没有"认识你之后才会说的话"，有就用它。
+    """
+    if ctx is not None and _voice is not None:
+        try:
+            text = _voice.pick_persona(ctx, last)
+        except Exception:       # 台词是装饰，不能让它把桌宠搞崩
+            text = None
+        if text:
+            return text
+
     if not lines:
         return ""
     if len(lines) == 1:
@@ -225,10 +245,11 @@ def pick(lines: list[str], last: str | None = None) -> str:
     return random.choice(lines)
 
 
-def for_action(action_id: str, cat: str, last: str | None = None) -> str:
+def for_action(action_id: str, cat: str, last: str | None = None, ctx=None) -> str:
     lines = ACTION_LINES.get(action_id) or CAT_LINES.get(cat) or IDLE_LINES
-    return pick(lines, last)
+    return pick(lines, last, ctx)
 
 
 def for_festival(name: str) -> str:
+    # 节日台词不接记忆层：一年就那么几次，不该被"你今天喝了咖啡"抢走
     return pick(FESTIVAL_LINES.get(name, IDLE_LINES))
