@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>stage</title>
+<style>
+  /* 三层要点缺一不可：
+     1) html/body 背景透明 —— 否则 WebView 默认白底
+     2) video 背景透明 —— 否则解码器给的黑底会露出来
+     3) 宽高都用 100% —— 容器的宽高比由 Dart 侧按 640:360 算好，
+        这里再铺满就不会变形 */
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    background: transparent;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; -webkit-user-select: none;
+  }
+  #stage {
+    position: relative;
+    width: 100%; height: 100%;
+    background: transparent;
+    overflow: hidden;
+  }
+  video {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    object-fit: fill;
+    background: transparent;
+    opacity: 0;
+    /* 切换靠 opacity，不要用 display:none —— 那会让解码器暂停，
+       切回来时重新 seek 会有明显黑帧 */
+    transition: opacity 60ms linear;
+    pointer-events: none;
+  }
+  video.on { opacity: 1; }
+  /* 镜像：桌面版用 p.scale(-1,1) 翻转，没有左右两套素材 */
+  video.flip { transform: scaleX(-1); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+(function () {
+  'use strict';
+
+  var stage = document.getElementById('stage');
+  var pool = {};      // name -> video 元素
+  var meta = {};      // name -> 诊断信息
+  var current = null;
+  var posted = { meta: 0, playing: 0, ready: 0 };
+
+  // ==== 往 Dart 回传事件 ====
+  //
+  // webview_flutter 的 addJavaScriptChannel('stagePost') 在页面里挂的是
+  // **window.stagePost.postMessage(str)**，不是 window.__stagePost。
+  //
+  // M1 第一轮真机自检就栽在这：页面里全写成了 window.__stagePost(...)，
+  // 那个名字压根不存在，外面套着 try/catch 所以连报错都没有。表现是
+  // 「诊断里明明有 META，Dart 却一条事件都收不到，12 条全部超时」。
+  //
+  // 这里两个都兼容，哪个在就用哪个。
+  function post(obj) {
+    var s;
+    try { s = JSON.stringify(obj); } catch (e) { return; }
+    try {
+      if (window.stagePost && typeof window.stagePost.postMessage === 'function') {
+        window.stagePost.postMessage(s);
+        return true;
+      }
+      if (typeof window.__stagePost === 'function') {
+        window.__stagePost(s);
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  // ==== 诊断：把状态写成 DOM 文本，Dart 侧可以直接读回来。
+  //      这样即使 JS 通道有问题，也能看到发生了什么。 ====
+  var diag = document.createElement('div');
+  diag.id = 'diag';
+  diag.style.cssText = 'position:fixed;left:0;bottom:0;font:10px monospace;' +
+    'color:#0f0;background:rgba(0,0,0,.65);padding:2px 4px;z-index:99;' +
+    'max-width:100%;word-break:break-all;display:none';
+  document.body.appendChild(diag);
+  var logs = [];
+  function say(s) {
+    logs.push(s);
+    if (logs.length > 60) logs.shift();     // 别让 diag 无限长
+    diag.textContent = logs.join(' | ');
+    post({ type: 'diag', msg: s });
+  }
+
+  say('js-ok');
+
+  // ==== 指令入口 ====
+  //
+  // Flutter 通过 runJavaScript 调用。入参是 **base64 编码的 JSON**。
+  // 原因：Dart 侧拼 JS 源码字符串时，任何引号/反斜杠/中文都可能拼坏，
+  // 而 runJavaScript 抛的异常又容易被 catch 吞掉，表现为指令静默丢失。
+  // base64 只有 [A-Za-z0-9+/=]，怎么传都不会坏。
+  var queue = [];
+  var draining = false;
+
+  function b64utf8(b64) {
+    var bin = atob(b64);
+    // atob 给的是 latin1；按 UTF-8 重新解，中文才不会乱
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder('utf-8').decode(bytes);
+  }
+
+  window.__cmd64 = function (b64) {
+    var msg;
+    try {
+      msg = JSON.parse(b64utf8(b64));
+    } catch (e) {
+      say('bad-cmd');
+      return;
+    }
+    // 每收到一条指令就回报一次，Dart 侧据此判断「到底收没收到」
+    post({ type: 'recv', cmd: msg.cmd, name: msg.name || '' });
+    queue.push(msg);
+    if (!draining) drain();
+  };
+
+  // 兼容旧调用（明文 JSON）
+  window.__cmd = function (json) {
+    var msg;
+    try { msg = JSON.parse(json); } catch (e) { say('bad-cmd'); return; }
+    post({ type: 'recv', cmd: msg.cmd, name: msg.name || '' });
+    queue.push(msg);
+    if (!draining) drain();
+  };
+
+  function drain() {
+    draining = true;
+    while (queue.length) {
+      var m = queue.shift();
+      try { handle(m); } catch (e) { say('err:' + (e && e.message)); }
+    }
+    draining = false;
+  }
+
+  function handle(m) {
+    switch (m.cmd) {
+      case 'play':    play(m.name, !!m.loop, !!m.flip); break;
+      case 'preload': preload(m.names || []); break;
+      case 'flip':    if (current) current.classList.toggle('flip', !!m.flip); break;
+      case 'pause':   pauseAll(); break;
+      case 'resume':  if (current) safePlay(current); break;
+      case 'probe':   probe(m.name); break;
+    }
+  }
+
+  function makeEl(name) {
+    var v = document.createElement('video');
+    v.setAttribute('playsinline', '');
+    v.setAttribute('webkit-playsinline', '');
+    v.muted = true;
+    v.defaultMuted = true;
+    v.preload = 'auto';
+    v.loop = true;
+    v.src = '/clip/' + name;
+    v.dataset.name = name;
+
+    v.addEventListener('error', function () {
+      var e = v.error;
+      var code = e ? e.code : -1;
+      say('ERR ' + name + ' code=' + code +
+          ' net=' + v.networkState + ' rs=' + v.readyState);
+      // 自检页只监听 type=error，必须 post 出去，光写 diag 没用
+      post({ type: 'error', name: name, code: code,
+             net: v.networkState, rs: v.readyState });
+    });
+
+    v.addEventListener('loadedmetadata', function () {
+      posted.meta++;
+      say('META ' + name + ' ' + v.videoWidth + 'x' + v.videoHeight);
+      post({ type: 'meta', name: name,
+             w: v.videoWidth, h: v.videoHeight,
+             durationMs: isFinite(v.duration) ? Math.round(v.duration * 1000) : 0 });
+    });
+
+    v.addEventListener('canplay', function () {
+      say('CANPLAY ' + name);
+      post({ type: 'canplay', name: name });
+    });
+
+    stage.appendChild(v);
+
+    // 用 fetch 探一次，HTTP 状态和 Content-Type 比 video 错误码有用
+    fetch('/clip/' + name).then(function (r) {
+      say('HTTP ' + name + ' ' + r.status + ' ' +
+          (r.headers.get('content-type') || '?'));
+      return r.arrayBuffer();
+    }).then(function (b) {
+      say('BYTES ' + name + ' ' + b.byteLength);
+      post({ type: 'preloaded', name: name, bytes: b.byteLength });
+    }).catch(function (e) {
+      say('FETCHFAIL ' + name + ' ' + e);
+    });
+
+    return v;
+  }
+
+  function preload(names) {
+    for (var i = 0; i < names.length; i++) {
+      if (!pool[names[i]]) pool[names[i]] = makeEl(names[i]);
+    }
+  }
+
+  function safePlay(v) {
+    var p = v.play();
+    if (p && p.catch) p.catch(function (e) { say('PLAYFAIL ' + (e && e.name)); });
+  }
+
+  function play(name, loop, flip) {
+    if (!pool[name]) pool[name] = makeEl(name);
+    var el = pool[name];
+    el.loop = !!loop;
+    el.classList.toggle('flip', !!flip);
+
+    if (current && current !== el) current.classList.remove('on');
+    current = el;
+    el.classList.add('on');
+    safePlay(el);
+
+    for (var k in pool) {
+      if (pool[k] !== el) { try { pool[k].pause(); } catch (e) {} }
+    }
+
+    // 元素可能早就在池子里、metadata 早就 load 完了，此时不会再触发
+    // loadedmetadata。补一次 meta，自检才不会假超时。
+    if (el.videoWidth) {
+      post({ type: 'meta', name: name,
+             w: el.videoWidth, h: el.videoHeight,
+             durationMs: isFinite(el.duration) ? Math.round(el.duration * 1000) : 0 });
+    }
+
+    posted.playing++;
+    say('PLAY ' + name);
+    // 'playing' 语义 = 指令已收到 + class 已切换（不是首帧上屏时间）
+    post({ type: 'playing', name: name, loop: !!loop });
+  }
+
+  function pauseAll() {
+    for (var k in pool) { try { pool[k].pause(); } catch (e) {} }
+  }
+
+  function probe(name) {
+    var el = pool[name];
+    if (!el || !el.videoWidth) {
+      say('PROBE ' + name + ' notready');
+      post({ type: 'probe', name: name, ok: false, reason: 'notready' });
+      return;
+    }
+    var c = document.createElement('canvas');
+    c.width = el.videoWidth; c.height = el.videoHeight;
+    var g = c.getContext('2d', { willReadFrequently: true });
+    g.clearRect(0, 0, c.width, c.height);
+    g.drawImage(el, 0, 0);
+    var d = g.getImageData(0, 0, c.width, c.height).data;
+    var a0 = 0, aLow = 0, aHigh = 0, n = c.width * c.height;
+    for (var i = 3; i < d.length; i += 4) {
+      var a = d[i];
+      if (a === 0) a0++; else if (a < 20) aLow++; else aHigh++;
+    }
+    say('PROBE ' + name + ' a0=' + (a0 / n * 100).toFixed(1) +
+        ' aLow=' + (aLow / n * 100).toFixed(1));
+    post({
+      type: 'probe', name: name, ok: true,
+      w: c.width, h: c.height,
+      a0: +(a0 / n * 100).toFixed(2),
+      aLow: +(aLow / n * 100).toFixed(2),
+      aHigh: +(aHigh / n * 100).toFixed(2)
+    });
+  }
+
+  // 把诊断文本挂到 window，Dart 可以用 runJavaScriptReturningResult 读
+  window.__diag = function () { return diag.textContent || ''; };
+  // 通道是否可用，自检页可以据此一眼判断
+  window.__chan = function () {
+    return !!(window.stagePost && window.stagePost.postMessage);
+  };
+
+  posted.ready++;
+  post({ type: 'ready' });
+  say('ready-posted');
+})();
+</script>
+</body>
+</html>

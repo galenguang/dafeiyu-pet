@@ -1,0 +1,2473 @@
+{
+ "version": 1,
+ "generatedAt": "2026-10-22T09:04:37",
+ "stage": {
+  "w": 640,
+  "h": 360
+ },
+ "fps": 24,
+ "alphaHitThreshold": 20,
+ "cropMargin": 4,
+ "categories": [
+  {
+   "key": "idle",
+   "label": "待机",
+   "icon": "🌙"
+  },
+  {
+   "key": "daily",
+   "label": "日常",
+   "icon": "🏠"
+  },
+  {
+   "key": "eat",
+   "label": "吃货",
+   "icon": "🍚"
+  },
+  {
+   "key": "festival",
+   "label": "节日",
+   "icon": "🎊"
+  },
+  {
+   "key": "perform",
+   "label": "表演",
+   "icon": "🎪"
+  },
+  {
+   "key": "music",
+   "label": "歌舞",
+   "icon": "🎵"
+  },
+  {
+   "key": "fx",
+   "label": "特效",
+   "icon": "✨"
+  },
+  {
+   "key": "muse",
+   "label": "碎碎念",
+   "icon": "💭"
+  },
+  {
+   "key": "balance",
+   "label": "余额",
+   "icon": "💰"
+  },
+  {
+   "key": "move",
+   "label": "移动",
+   "icon": "👣"
+  },
+  {
+   "key": "click",
+   "label": "点击反应",
+   "icon": "👆"
+  },
+  {
+   "key": "special",
+   "label": "特殊",
+   "icon": "🧩"
+  }
+ ],
+ "features": [
+  {
+   "key": "random_perform",
+   "label": "随机表演",
+   "icon": "🎪",
+   "kind": "pool",
+   "target": "perform"
+  },
+  {
+   "key": "random_fx",
+   "label": "随机特效",
+   "icon": "✨",
+   "kind": "pool",
+   "target": "fx"
+  },
+  {
+   "key": "festival",
+   "label": "节日限定",
+   "icon": "🎊",
+   "kind": "special",
+   "target": "festival"
+  },
+  {
+   "key": "random_music",
+   "label": "随机歌舞",
+   "icon": "🎵",
+   "kind": "pool",
+   "target": "music"
+  },
+  {
+   "key": "random_eat",
+   "label": "随便吃点",
+   "icon": "🍚",
+   "kind": "pool",
+   "target": "eat"
+  },
+  {
+   "key": "sleep",
+   "label": "打盹",
+   "icon": "😴",
+   "kind": "action",
+   "target": "sleep"
+  },
+  {
+   "key": "stretch",
+   "label": "伸懒腰",
+   "icon": "🙆",
+   "kind": "action",
+   "target": "stretch"
+  },
+  {
+   "key": "startled",
+   "label": "吓一跳",
+   "icon": "😱",
+   "kind": "action",
+   "target": "startled"
+  },
+  {
+   "key": "hotpot",
+   "label": "涮火锅",
+   "icon": "🍲",
+   "kind": "action",
+   "target": "hotpot"
+  },
+  {
+   "key": "random_daily",
+   "label": "随机日常",
+   "icon": "🏠",
+   "kind": "pool",
+   "target": "daily"
+  },
+  {
+   "key": "balance",
+   "label": "看看余额",
+   "icon": "💰",
+   "kind": "special",
+   "target": "balance"
+  },
+  {
+   "key": "mooncake_token",
+   "label": "Token吃月饼",
+   "icon": "🥮",
+   "kind": "special",
+   "target": "mooncake_token"
+  },
+  {
+   "key": "maid_dance",
+   "label": "女仆舞",
+   "icon": "💃",
+   "kind": "action",
+   "target": "maidDance"
+  },
+  {
+   "key": "hum_song",
+   "label": "哼歌",
+   "icon": "🎤",
+   "kind": "action",
+   "target": "humSong"
+  },
+  {
+   "key": "ice_cream",
+   "label": "吃冰淇淋",
+   "icon": "🍦",
+   "kind": "action",
+   "target": "iceCream"
+  },
+  {
+   "key": "snack",
+   "label": "吃零食",
+   "icon": "🍿",
+   "kind": "action",
+   "target": "snack"
+  },
+  {
+   "key": "fireworks",
+   "label": "放烟花",
+   "icon": "🎆",
+   "kind": "action",
+   "target": "fireworks"
+  },
+  {
+   "key": "red_envelope",
+   "label": "收红包",
+   "icon": "🧧",
+   "kind": "action",
+   "target": "redEnvelope"
+  },
+  {
+   "key": "dance",
+   "label": "宅舞",
+   "icon": "🕺",
+   "kind": "action",
+   "target": "dance"
+  },
+  {
+   "key": "whale_appear",
+   "label": "蓝鲸现世",
+   "icon": "🐋",
+   "kind": "action",
+   "target": "whaleAppear"
+  },
+  {
+   "key": "pet_cat",
+   "label": "撸猫",
+   "icon": "🐱",
+   "kind": "action",
+   "target": "petCat"
+  },
+  {
+   "key": "whale_bubbles",
+   "label": "鲸吐泡泡",
+   "icon": "🫧",
+   "kind": "action",
+   "target": "whaleBubbles"
+  },
+  {
+   "key": "whale_tail",
+   "label": "鲸尾拍地",
+   "icon": "🌊",
+   "kind": "action",
+   "target": "whaleTail"
+  },
+  {
+   "key": "little_ghost",
+   "label": "小幽灵",
+   "icon": "👻",
+   "kind": "action",
+   "target": "littleGhost"
+  },
+  {
+   "key": "coding",
+   "label": "写代码",
+   "icon": "💻",
+   "kind": "action",
+   "target": "coding"
+  },
+  {
+   "key": "caught_snacking",
+   "label": "偷吃被抓",
+   "icon": "🍪",
+   "kind": "action",
+   "target": "caughtSnacking"
+  },
+  {
+   "key": "rage_quit",
+   "label": "气急败坏",
+   "icon": "💢",
+   "kind": "action",
+   "target": "rageQuit"
+  },
+  {
+   "key": "crab_walk",
+   "label": "螃蟹步",
+   "icon": "🦀",
+   "kind": "action",
+   "target": "crabWalk"
+  }
+ ],
+ "clips": [
+  {
+   "id": "animalHalo",
+   "file": "animal-halo.webm",
+   "name": "兽耳光环",
+   "cat": "fx",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    73,
+    27,
+    479,
+    321
+   ],
+   "anchor": [
+    320,
+    347
+   ],
+   "icon": "🐾"
+  },
+  {
+   "id": "balanceBroke",
+   "file": "balance-broke.webm",
+   "name": "余额告急",
+   "cat": "balance",
+   "kind": "act",
+   "weight": 0.4,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    72,
+    37,
+    478,
+    323
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "💸"
+  },
+  {
+   "id": "balanceCount",
+   "file": "balance-count.webm",
+   "name": "数钱",
+   "cat": "balance",
+   "kind": "act",
+   "weight": 0.4,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    205,
+    57,
+    233,
+    278
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🧮"
+  },
+  {
+   "id": "balanceEmpty",
+   "file": "balance-empty.webm",
+   "name": "余额空空",
+   "cat": "balance",
+   "kind": "act",
+   "weight": 0.4,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    70,
+    34,
+    480,
+    326
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🪙"
+  },
+  {
+   "id": "balanceJingle",
+   "file": "balance-jingle.webm",
+   "name": "金币叮当",
+   "cat": "balance",
+   "kind": "act",
+   "weight": 0.4,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    73,
+    28,
+    515,
+    332
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🔔"
+  },
+  {
+   "id": "balanceNormal",
+   "file": "balance-normal.webm",
+   "name": "余额正常",
+   "cat": "balance",
+   "kind": "act",
+   "weight": 0.4,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    69,
+    36,
+    482,
+    324
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "📊"
+  },
+  {
+   "id": "balanceOverflow",
+   "file": "balance-overflow.webm",
+   "name": "余额爆表",
+   "cat": "balance",
+   "kind": "act",
+   "weight": 0.4,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    79,
+    30,
+    508,
+    326
+   ],
+   "anchor": [
+    320,
+    355
+   ],
+   "icon": "💰"
+  },
+  {
+   "id": "blowBalloon",
+   "file": "blow-balloon.webm",
+   "name": "吹气球",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    16,
+    28,
+    596,
+    332
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🎈"
+  },
+  {
+   "id": "brushTeeth",
+   "file": "brush-teeth.webm",
+   "name": "刷牙",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    181,
+    57,
+    260,
+    294
+   ],
+   "anchor": [
+    320,
+    350
+   ],
+   "icon": "🪥"
+  },
+  {
+   "id": "buildSnowman",
+   "file": "build-snowman.webm",
+   "name": "堆雪人",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    194,
+    58,
+    296,
+    288
+   ],
+   "anchor": [
+    320,
+    345
+   ],
+   "icon": "⛄"
+  },
+  {
+   "id": "butterflyHalo",
+   "file": "butterfly-halo.webm",
+   "name": "蝶舞光环",
+   "cat": "fx",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    0,
+    4,
+    634,
+    337
+   ],
+   "anchor": [
+    320,
+    340
+   ],
+   "icon": "🦋"
+  },
+  {
+   "id": "cardMagic",
+   "file": "card-magic.webm",
+   "name": "扑克魔术",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    176,
+    59,
+    264,
+    276
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🃏"
+  },
+  {
+   "id": "caughtSnacking",
+   "file": "caught-snacking.webm",
+   "name": "偷吃被抓",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 1.2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    206,
+    26,
+    237,
+    309
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🍪"
+  },
+  {
+   "id": "chongyangFlower",
+   "file": "chongyang-flower.webm",
+   "name": "重阳赏菊",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    204,
+    59,
+    240,
+    276
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🌼"
+  },
+  {
+   "id": "christmasTree",
+   "file": "christmas-tree.webm",
+   "name": "装圣诞树",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    53,
+    37,
+    498,
+    323
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🎄"
+  },
+  {
+   "id": "clickAngry",
+   "file": "click-angry.webm",
+   "name": "生气",
+   "cat": "click",
+   "kind": "click",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    198,
+    56,
+    236,
+    279
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "😠"
+  },
+  {
+   "id": "clickGiggle",
+   "file": "click-giggle.webm",
+   "name": "偷笑",
+   "cat": "click",
+   "kind": "click",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    201,
+    53,
+    242,
+    282
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🤭"
+  },
+  {
+   "id": "clickJoy",
+   "file": "click-joy.webm",
+   "name": "开心",
+   "cat": "click",
+   "kind": "click",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    179,
+    14,
+    283,
+    322
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "😄"
+  },
+  {
+   "id": "clickShy",
+   "file": "click-shy.webm",
+   "name": "害羞",
+   "cat": "click",
+   "kind": "click",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    111,
+    59,
+    330,
+    276
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "😳"
+  },
+  {
+   "id": "clickWave",
+   "file": "click-wave.webm",
+   "name": "挥手",
+   "cat": "click",
+   "kind": "click",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    203,
+    32,
+    232,
+    303
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "👋"
+  },
+  {
+   "id": "coding",
+   "file": "coding.webm",
+   "name": "写代码",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    206,
+    56,
+    230,
+    279
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "💻"
+  },
+  {
+   "id": "conjureFlowers",
+   "file": "conjure-flowers.webm",
+   "name": "变花",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    117,
+    22,
+    436,
+    323
+   ],
+   "anchor": [
+    320,
+    344
+   ],
+   "icon": "💐"
+  },
+  {
+   "id": "crabWalk",
+   "file": "crab-walk.webm",
+   "name": "螃蟹步",
+   "cat": "move",
+   "kind": "move",
+   "weight": 1,
+   "loop": true,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    182,
+    59,
+    273,
+    278
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "🦀"
+  },
+  {
+   "id": "dance",
+   "file": "dance.webm",
+   "name": "宅舞",
+   "cat": "music",
+   "kind": "act",
+   "weight": 1.2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    203,
+    51,
+    245,
+    285
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "🕺"
+  },
+  {
+   "id": "deskTap",
+   "file": "desk-tap.webm",
+   "name": "敲桌子",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    197,
+    59,
+    235,
+    276
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "👆"
+  },
+  {
+   "id": "drag",
+   "file": "drag.webm",
+   "name": "被拖走",
+   "cat": "special",
+   "kind": "drag",
+   "weight": 1,
+   "loop": true,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    200,
+    21,
+    255,
+    314
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🎣"
+  },
+  {
+   "id": "dressUp",
+   "file": "dress-up.webm",
+   "name": "换衣服",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    187,
+    49,
+    292,
+    286
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "👗"
+  },
+  {
+   "id": "eatBreakfast",
+   "file": "eat-breakfast.webm",
+   "name": "吃早饭",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    205,
+    56,
+    230,
+    278
+   ],
+   "anchor": [
+    320,
+    333
+   ],
+   "icon": "🍳"
+  },
+  {
+   "id": "eatChongyangCake",
+   "file": "eat-chongyang-cake.webm",
+   "name": "吃重阳糕",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    207,
+    57,
+    233,
+    278
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🥮"
+  },
+  {
+   "id": "eatCrab",
+   "file": "eat-crab.webm",
+   "name": "吃螃蟹",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.7,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    199,
+    58,
+    258,
+    287
+   ],
+   "anchor": [
+    320,
+    344
+   ],
+   "icon": "🦀"
+  },
+  {
+   "id": "eatDinner",
+   "file": "eat-dinner.webm",
+   "name": "吃晚饭",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    94,
+    56,
+    458,
+    285
+   ],
+   "anchor": [
+    320,
+    340
+   ],
+   "icon": "🍛"
+  },
+  {
+   "id": "eatDumpling",
+   "file": "eat-dumpling.webm",
+   "name": "吃饺子",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.7,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    189,
+    31,
+    266,
+    315
+   ],
+   "anchor": [
+    320,
+    345
+   ],
+   "icon": "🥟"
+  },
+  {
+   "id": "eatLaba",
+   "file": "eat-laba.webm",
+   "name": "喝腊八粥",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    197,
+    59,
+    237,
+    275
+   ],
+   "anchor": [
+    320,
+    333
+   ],
+   "icon": "🥣"
+  },
+  {
+   "id": "eatLunch",
+   "file": "eat-lunch.webm",
+   "name": "吃午饭",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    200,
+    56,
+    236,
+    281
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "🍱"
+  },
+  {
+   "id": "eatNoodles",
+   "file": "eat-noodles.webm",
+   "name": "嗦面",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    123,
+    57,
+    319,
+    277
+   ],
+   "anchor": [
+    320,
+    333
+   ],
+   "icon": "🍜"
+  },
+  {
+   "id": "eatQingtuan",
+   "file": "eat-qingtuan.webm",
+   "name": "吃青团",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    203,
+    57,
+    234,
+    278
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🟢"
+  },
+  {
+   "id": "eatRice",
+   "file": "eat-rice.webm",
+   "name": "干饭",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.7,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    198,
+    58,
+    242,
+    284
+   ],
+   "anchor": [
+    320,
+    341
+   ],
+   "icon": "🍚"
+  },
+  {
+   "id": "eatRicecake",
+   "file": "eat-ricecake.webm",
+   "name": "吃年糕",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    198,
+    58,
+    239,
+    277
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🍡"
+  },
+  {
+   "id": "eatTanghulu",
+   "file": "eat-tanghulu.webm",
+   "name": "吃糖葫芦",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    199,
+    56,
+    245,
+    279
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🍢"
+  },
+  {
+   "id": "eatTangyuan",
+   "file": "eat-tangyuan.webm",
+   "name": "吃汤圆",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    207,
+    59,
+    231,
+    275
+   ],
+   "anchor": [
+    320,
+    333
+   ],
+   "icon": "⚪"
+  },
+  {
+   "id": "eatToken",
+   "file": "eat-token.webm",
+   "name": "吃 Token",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 1.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    138,
+    55,
+    365,
+    282
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "🪙"
+  },
+  {
+   "id": "eatWatermelon",
+   "file": "eat-watermelon.webm",
+   "name": "吃西瓜",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    201,
+    56,
+    239,
+    280
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "🍉"
+  },
+  {
+   "id": "eatZongzi",
+   "file": "eat-zongzi.webm",
+   "name": "吃粽子",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    206,
+    59,
+    236,
+    278
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "🍙"
+  },
+  {
+   "id": "fireworks",
+   "file": "fireworks.webm",
+   "name": "放烟花",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    17,
+    0,
+    607,
+    360
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🎆"
+  },
+  {
+   "id": "floatStep",
+   "file": "float-step.webm",
+   "name": "飘步",
+   "cat": "move",
+   "kind": "move",
+   "weight": 1,
+   "loop": true,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    207,
+    55,
+    229,
+    283
+   ],
+   "anchor": [
+    320,
+    337
+   ],
+   "icon": "👣"
+  },
+  {
+   "id": "flyKite",
+   "file": "fly-kite.webm",
+   "name": "放风筝",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    99,
+    0,
+    414,
+    337
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "🪁"
+  },
+  {
+   "id": "gomoku",
+   "file": "gomoku.webm",
+   "name": "下五子棋",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    199,
+    46,
+    247,
+    303
+   ],
+   "anchor": [
+    320,
+    348
+   ],
+   "icon": "⚫"
+  },
+  {
+   "id": "halloweenPumpkin",
+   "file": "halloween-pumpkin.webm",
+   "name": "万圣南瓜",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    197,
+    57,
+    254,
+    280
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "🎃"
+  },
+  {
+   "id": "hotpot",
+   "file": "hotpot.webm",
+   "name": "涮火锅",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 1.2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    198,
+    58,
+    243,
+    298
+   ],
+   "anchor": [
+    320,
+    355
+   ],
+   "icon": "🍲"
+  },
+  {
+   "id": "humSong",
+   "file": "hum-song.webm",
+   "name": "哼歌",
+   "cat": "music",
+   "kind": "act",
+   "weight": 1.2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    138,
+    2,
+    355,
+    333
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🎤"
+  },
+  {
+   "id": "iceCream",
+   "file": "ice-cream.webm",
+   "name": "吃冰淇淋",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 1.2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    204,
+    56,
+    232,
+    284
+   ],
+   "anchor": [
+    320,
+    339
+   ],
+   "icon": "🍦"
+  },
+  {
+   "id": "idle",
+   "file": "idle.webm",
+   "name": "待机",
+   "cat": "idle",
+   "kind": "idle",
+   "weight": 14,
+   "loop": true,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    191,
+    55,
+    249,
+    280
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🌙"
+  },
+  {
+   "id": "jotNotes",
+   "file": "jot-notes.webm",
+   "name": "记笔记",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    189,
+    55,
+    250,
+    280
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "📝"
+  },
+  {
+   "id": "juggleBalls",
+   "file": "juggle-balls.webm",
+   "name": "抛接球",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    204,
+    32,
+    236,
+    304
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "🤹"
+  },
+  {
+   "id": "leafPile",
+   "file": "leaf-pile.webm",
+   "name": "落叶堆",
+   "cat": "fx",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    28,
+    29,
+    588,
+    331
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🍂"
+  },
+  {
+   "id": "lionDance",
+   "file": "lion-dance.webm",
+   "name": "舞狮",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    197,
+    28,
+    251,
+    307
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🦁"
+  },
+  {
+   "id": "littleGhost",
+   "file": "little-ghost.webm",
+   "name": "小幽灵",
+   "cat": "fx",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    156,
+    43,
+    339,
+    300
+   ],
+   "anchor": [
+    320,
+    342
+   ],
+   "icon": "👻"
+  },
+  {
+   "id": "lookAround",
+   "file": "look-around.webm",
+   "name": "东张西望",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 4,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    204,
+    58,
+    242,
+    277
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "👀"
+  },
+  {
+   "id": "magicDove",
+   "file": "magic-dove.webm",
+   "name": "变鸽子",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    115,
+    18,
+    414,
+    317
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🕊"
+  },
+  {
+   "id": "maidCurtsy",
+   "file": "maid-curtsy.webm",
+   "name": "女仆行礼",
+   "cat": "music",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    206,
+    58,
+    228,
+    280
+   ],
+   "anchor": [
+    320,
+    337
+   ],
+   "icon": "🙇"
+  },
+  {
+   "id": "maidDance",
+   "file": "maid-dance.webm",
+   "name": "女仆舞",
+   "cat": "music",
+   "kind": "act",
+   "weight": 1.2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    200,
+    48,
+    269,
+    289
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "💃"
+  },
+  {
+   "id": "mirror",
+   "file": "mirror.webm",
+   "name": "照镜子",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    193,
+    49,
+    272,
+    286
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🪞"
+  },
+  {
+   "id": "mooncake",
+   "file": "mooncake.webm",
+   "name": "吃月饼",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    193,
+    47,
+    396,
+    289
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "🥮"
+  },
+  {
+   "id": "muse",
+   "file": "muse.webm",
+   "name": "碎碎念",
+   "cat": "muse",
+   "kind": "act",
+   "weight": 2.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    202,
+    45,
+    234,
+    290
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "💭"
+  },
+  {
+   "id": "museScreen",
+   "file": "muse-screen.webm",
+   "name": "盯屏幕",
+   "cat": "muse",
+   "kind": "act",
+   "weight": 1.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    208,
+    57,
+    224,
+    278
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🖥"
+  },
+  {
+   "id": "museThink",
+   "file": "muse-think.webm",
+   "name": "沉思",
+   "cat": "muse",
+   "kind": "act",
+   "weight": 2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    89,
+    48,
+    467,
+    292
+   ],
+   "anchor": [
+    320,
+    339
+   ],
+   "icon": "🤔"
+  },
+  {
+   "id": "museWipe",
+   "file": "muse-wipe.webm",
+   "name": "擦擦脸",
+   "cat": "muse",
+   "kind": "act",
+   "weight": 1.5,
+   "loop": false,
+   "frames": 192,
+   "durationMs": 8000,
+   "crop": [
+    196,
+    60,
+    236,
+    275
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🧻"
+  },
+  {
+   "id": "petCat",
+   "file": "pet-cat.webm",
+   "name": "撸猫",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 1.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    205,
+    57,
+    231,
+    277
+   ],
+   "anchor": [
+    320,
+    333
+   ],
+   "icon": "🐱"
+  },
+  {
+   "id": "playFlute",
+   "file": "play-flute.webm",
+   "name": "吹笛子",
+   "cat": "music",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    70,
+    21,
+    479,
+    319
+   ],
+   "anchor": [
+    320,
+    339
+   ],
+   "icon": "🎼"
+  },
+  {
+   "id": "qixiNeedle",
+   "file": "qixi-needle.webm",
+   "name": "七夕乞巧",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    177,
+    42,
+    362,
+    293
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🪡"
+  },
+  {
+   "id": "rageQuit",
+   "file": "rage-quit.webm",
+   "name": "气急败坏",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    164,
+    52,
+    289,
+    295
+   ],
+   "anchor": [
+    320,
+    346
+   ],
+   "icon": "💢"
+  },
+  {
+   "id": "redEnvelope",
+   "file": "red-envelope.webm",
+   "name": "收红包",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.7,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    203,
+    59,
+    241,
+    276
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🧧"
+  },
+  {
+   "id": "riverLantern",
+   "file": "river-lantern.webm",
+   "name": "放河灯",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    204,
+    59,
+    234,
+    276
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🕯"
+  },
+  {
+   "id": "rockingHorse",
+   "file": "rocking-horse.webm",
+   "name": "摇木马",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    148,
+    11,
+    351,
+    349
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🐴"
+  },
+  {
+   "id": "rubikCube",
+   "file": "rubik-cube.webm",
+   "name": "玩魔方",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    171,
+    60,
+    272,
+    282
+   ],
+   "anchor": [
+    320,
+    341
+   ],
+   "icon": "🧩"
+  },
+  {
+   "id": "run",
+   "file": "run.webm",
+   "name": "跑",
+   "cat": "move",
+   "kind": "move",
+   "weight": 1,
+   "loop": true,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    116,
+    52,
+    355,
+    288
+   ],
+   "anchor": [
+    320,
+    339
+   ],
+   "icon": "🏃"
+  },
+  {
+   "id": "shuttlecock",
+   "file": "shuttlecock.webm",
+   "name": "踢毽子",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    189,
+    24,
+    265,
+    313
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "🏸"
+  },
+  {
+   "id": "skyLantern",
+   "file": "sky-lantern.webm",
+   "name": "放天灯",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    157,
+    0,
+    283,
+    355
+   ],
+   "anchor": [
+    320,
+    354
+   ],
+   "icon": "🏮"
+  },
+  {
+   "id": "sleep",
+   "file": "sleep.webm",
+   "name": "打盹",
+   "cat": "idle",
+   "kind": "idle",
+   "weight": 3,
+   "loop": true,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    202,
+    25,
+    232,
+    311
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "😴"
+  },
+  {
+   "id": "smashOverhead",
+   "file": "smash-overhead.webm",
+   "name": "砸头",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    109,
+    0,
+    421,
+    338
+   ],
+   "anchor": [
+    320,
+    337
+   ],
+   "icon": "🔨"
+  },
+  {
+   "id": "snack",
+   "file": "snack.webm",
+   "name": "吃零食",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 1.2,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    31,
+    39,
+    564,
+    321
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🍿"
+  },
+  {
+   "id": "spinShow",
+   "file": "spin-show.webm",
+   "name": "转圈圈",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    186,
+    43,
+    286,
+    293
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "💫"
+  },
+  {
+   "id": "spinTop",
+   "file": "spin-top.webm",
+   "name": "抽陀螺",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    161,
+    60,
+    281,
+    288
+   ],
+   "anchor": [
+    320,
+    347
+   ],
+   "icon": "🌀"
+  },
+  {
+   "id": "squash",
+   "file": "squash.webm",
+   "name": "落地挤压",
+   "cat": "special",
+   "kind": "squash",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    203,
+    42,
+    255,
+    299
+   ],
+   "anchor": [
+    320,
+    340
+   ],
+   "icon": "💥"
+  },
+  {
+   "id": "startled",
+   "file": "startled.webm",
+   "name": "吓一跳",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    201,
+    27,
+    238,
+    307
+   ],
+   "anchor": [
+    320,
+    333
+   ],
+   "icon": "😱"
+  },
+  {
+   "id": "stretch",
+   "file": "stretch.webm",
+   "name": "伸懒腰",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 3,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    207,
+    53,
+    228,
+    282
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🙆"
+  },
+  {
+   "id": "summerFan",
+   "file": "summer-fan.webm",
+   "name": "摇蒲扇",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    152,
+    48,
+    321,
+    289
+   ],
+   "anchor": [
+    320,
+    336
+   ],
+   "icon": "🪭"
+  },
+  {
+   "id": "swayDance",
+   "file": "sway-dance.webm",
+   "name": "摇摆舞",
+   "cat": "music",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    190,
+    55,
+    286,
+    281
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "🎶"
+  },
+  {
+   "id": "swing",
+   "file": "swing.webm",
+   "name": "荡秋千",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    186,
+    14,
+    296,
+    322
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "🛝"
+  },
+  {
+   "id": "toyCar",
+   "file": "toy-car.webm",
+   "name": "玩小车",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    70,
+    49,
+    482,
+    300
+   ],
+   "anchor": [
+    320,
+    348
+   ],
+   "icon": "🚗"
+  },
+  {
+   "id": "unwrapGift",
+   "file": "unwrap-gift.webm",
+   "name": "拆礼物",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.5,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    153,
+    40,
+    321,
+    304
+   ],
+   "anchor": [
+    320,
+    343
+   ],
+   "icon": "🎁"
+  },
+  {
+   "id": "violin",
+   "file": "violin.webm",
+   "name": "拉小提琴",
+   "cat": "music",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    132,
+    57,
+    342,
+    289
+   ],
+   "anchor": [
+    320,
+    345
+   ],
+   "icon": "🎻"
+  },
+  {
+   "id": "wakeUp",
+   "file": "wake-up.webm",
+   "name": "睡醒",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    195,
+    16,
+    257,
+    319
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🌅"
+  },
+  {
+   "id": "waterGun",
+   "file": "water-gun.webm",
+   "name": "玩水枪",
+   "cat": "perform",
+   "kind": "act",
+   "weight": 0.9,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    30,
+    59,
+    567,
+    301
+   ],
+   "anchor": [
+    320,
+    359
+   ],
+   "icon": "🔫"
+  },
+  {
+   "id": "whaleAppear",
+   "file": "whale-appear.webm",
+   "name": "蓝鲸现世",
+   "cat": "fx",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    124,
+    33,
+    364,
+    302
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🐋"
+  },
+  {
+   "id": "whaleBubbles",
+   "file": "whale-bubbles.webm",
+   "name": "鲸吐泡泡",
+   "cat": "fx",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    110,
+    31,
+    325,
+    305
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "🫧"
+  },
+  {
+   "id": "whaleTail",
+   "file": "whale-tail.webm",
+   "name": "鲸尾拍地",
+   "cat": "fx",
+   "kind": "act",
+   "weight": 0.8,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    204,
+    57,
+    270,
+    278
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🌊"
+  },
+  {
+   "id": "whatToEat",
+   "file": "what-to-eat.webm",
+   "name": "吃啥好呢",
+   "cat": "eat",
+   "kind": "act",
+   "weight": 1,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    51,
+    40,
+    560,
+    295
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🍽"
+  },
+  {
+   "id": "writeFu",
+   "file": "write-fu.webm",
+   "name": "写福字",
+   "cat": "festival",
+   "kind": "act",
+   "weight": 0.6,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    166,
+    57,
+    272,
+    279
+   ],
+   "anchor": [
+    320,
+    335
+   ],
+   "icon": "🖌"
+  },
+  {
+   "id": "yawn",
+   "file": "yawn.webm",
+   "name": "打哈欠",
+   "cat": "daily",
+   "kind": "act",
+   "weight": 3,
+   "loop": false,
+   "frames": 241,
+   "durationMs": 10042,
+   "crop": [
+    202,
+    55,
+    235,
+    280
+   ],
+   "anchor": [
+    320,
+    334
+   ],
+   "icon": "🥱"
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Widget Preview related
+.widget_preview/
+
+# ---------------------------------------------------------------------------
+# 动画素材（100 段 VP9-alpha webm，共 50MB）
+#
+# **故意不入库**：这批文件是仓库里 assets/webm/ 经过 alpha 钳位后的派生物
+# （见 docs 里的 M0 记录）。放进来会有三个问题：
+#   1. 仓库凭空多 50MB，而且和第二份只剩钳位前后的差异，语义重复；
+#   2. 以后重新编码一次就再叠 50MB 历史，永远删不掉；
+#   3. Gitee 对单文件超 50MB 会拒收。
+#
+# 克隆后跑一次就能补齐（会自动回退到 assets/webm/）：
+#     python tools/sync_assets.py
+#
+# manifest.json 是**入库**的——它只有 37KB，且是工程的一部分结构。
+# ---------------------------------------------------------------------------
+/assets/clips/
+

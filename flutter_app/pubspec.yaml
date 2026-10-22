@@ -1,0 +1,47 @@
+name: dafeiyu
+description: "大肥鱼桌宠 · Android 版"
+publish_to: 'none'
+
+# versionName+versionCode。发布前改这里。
+version: 2.0.0+1
+
+environment:
+  sdk: ^3.13.5
+
+# ---- 依赖纪律 ----
+# 计划里定了「依赖不超过 10 个」，理由是一个人维护两个平台时，
+# 每个依赖都是一条上游断裂的风险。下面是全部依赖，加之前先问一句
+# 「这 50 行我自己写不出来吗」。
+#
+# 刻意**没有**引入的：
+#   - riverpod / bloc / provider : 用 ChangeNotifier + ValueListenableBuilder 够了
+#   - http / dio                 : dart:io 的 HttpClient 够，还省一个依赖
+#   - path_provider              : 自己写 MethodChannel 拿 filesDir，20 行
+#   - sqlite / hive              : 数据和桌面版共用 JSON，保持可互通
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # WebView 容器，用来播 VP9-alpha。这是唯一无法自己写的依赖，
+  # 因为要的是 Chromium 的解码器。
+  webview_flutter: ^4.14.0
+
+  # 本地 HTTP 服务：WebView 不能用 file:// 读 assets 里的 webm
+  # （同源策略在各版本行为不一致），必须过 http。
+  # 用 dart:io 的 HttpServer 自己起，不需要 shelf。
+  # HTTP 客户端同理用 dart:io HttpClient。
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    # 素材由 tools/sync_assets.py 从 build/clips/ 同步过来，
+    # 不手工拷贝，避免两边不一致。
+    - assets/manifest.json
+    - assets/stage.html
+    - assets/clips/
