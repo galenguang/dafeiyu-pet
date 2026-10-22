@@ -11,6 +11,7 @@
 - **电脑体检**：CPU / 内存 / 显卡 / 磁盘 / 网络 / 电池 / 进程
 - **AI 聊天**：任意兼容 OpenAI 接口的模型 —— DeepSeek / OpenAI / 通义 / Kimi / 智谱 / Ollama 本地都能接
 - **节日自动感知**：农历节日用预生成表，当天会主动过节
+- **手机版（实验）**：Flutter 重写的 Android 版，聊天 / 记忆 / 画中画都已可用，见 [手机版](#手机版实验)
 
 **仓库**：[Gitee](https://gitee.com/albot-crane/dafeiyu-pet) · [GitHub](https://github.com/star211199/dafeiyu-pet)
 
@@ -421,10 +422,45 @@ dafeiyu_pet/
 ├── assets/
 │   ├── webm/               100 段透明动画
 │   └── icon.png / .ico
+├── flutter_app/            Android 版（Flutter），见下方"手机版"
 ├── docs/screenshots/       README 用截图
 ├── tools/                  图标生成、界面预览、素材处理、交互测试、离线测试套件
 └── 大肥鱼桌宠.spec         PyInstaller 配置
 ```
+
+---
+
+## 手机版（实验）
+
+`flutter_app/` 是用 Flutter 重写的 Android 版。PySide6 在手机上跑不起来，
+所以 UI 全部重写、Win32 那部分能力丢弃，可复用的是动作注册表、记忆逻辑和交互手感。
+
+**已经能用的**：100 段动画播放、单击 / 双击 / 拖动、AI 聊天、可配置任意
+OpenAI 兼容模型、记忆（数据层 + 抽取 + 检索 + 面板）、画中画小窗、真退出、
+手动调节大小。
+
+**构建**：
+
+```bash
+cd flutter_app
+python ../tools/sync_assets.py    # 补素材，见下
+flutter build apk --release
+```
+
+**素材不在仓库里。** `flutter_app/assets/clips/` 的 100 段 webm 共 50MB，
+是 `assets/webm/` 经 alpha 钳位后的派生物，故意没入库。
+克隆后必须跑一次 `tools/sync_assets.py` 才有素材，否则 App 一启动就报
+"本地素材服务启动失败"。脚本会自动选源：有 `build/clips/`（钳位版，
+体积一半、手机上解码更快）就用它，没有就回退到 `assets/webm/`（原始版，
+画面正常但边缘有一层薄雾）。
+
+**本地调试不花 token**：`python tools/fake_llm_server.py` 起一个假服务，
+配合 `adb reverse tcp:8899 tcp:8899`，App 里把 Base URL 填
+`http://localhost:8899/v1`、Key 填 `test`、模型填 `fake`，
+就能把"聊天 → 记忆抽取"整条链路跑通。服务端会打印每个请求带没带记忆块。
+
+技术选型、踩过的坑和真机验收数据记在
+[`docs/mobile-feature-plan.md`](docs/mobile-feature-plan.md)。
 
 ---
 
