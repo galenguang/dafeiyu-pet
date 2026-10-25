@@ -281,21 +281,22 @@ class PetWindow(QWidget):
         self.frame = player.poll() or self.frame
         self._next_frame_at = time.monotonic() * 1000 + FRAME_MS
 
-    def _advance_frame(self) -> None:
+    def _advance_frame(self) -> bool:
         now_ms = time.monotonic() * 1000
         if now_ms < self._next_frame_at:
-            return
+            return False
         if self.player is None:
-            return
+            return False
         img = self.player.poll()
         if img is None:
             # 缓冲空了，保持当前帧，下个 tick 再试
             self._next_frame_at = now_ms + 8
-            return
+            return False
         self.frame = img
         self._next_frame_at += FRAME_MS
         if self._next_frame_at < now_ms - FRAME_MS * 3:
             self._next_frame_at = now_ms + FRAME_MS
+        return True
 
     # ================= 动作 =================
     def play_action(self, action_id: str, speak: bool = True,
@@ -361,10 +362,11 @@ class PetWindow(QWidget):
                 self.say(text, inner=inner)
             self._say_queue.clear()
 
-        # 2. 帧推进
-        self._advance_frame()
+        # 2. 帧推进（只有真的换了帧才重画：24fps，而不是跟着 50Hz 空转）
+        need_paint = self._advance_frame()
         if self.fade > 0:
             self.fade = max(0.0, self.fade - 0.16)
+            need_paint = True
 
         # 3. 跨天 / 节日
         today = festival.today()
@@ -393,7 +395,14 @@ class PetWindow(QWidget):
                 and not self._agent_busy()):
             self._auto_perform()
 
-        self.update()
+        # 气泡淡出的最后半秒要连续重画，其余时间静止画面不用刷。
+        # 移动是靠 move() 挪窗口，不产生重绘；说话/换动作会各自 update()。
+        if self.bubble_text:
+            remain = self.bubble_until - now
+            if 0 < remain < 0.7:
+                need_paint = True
+        if need_paint:
+            self.update()
 
     def _move_logic(self, now: float) -> None:
         # 移动动作进行中：保持直线走

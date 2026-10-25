@@ -11,11 +11,13 @@ import math
 import random
 from dataclasses import dataclass
 
-from PySide6.QtCore import QPointF, QRectF, Qt, QTimer
+from PySide6.QtCore import QPointF, QRect, QRectF, Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QPainter, QPen, QPolygonF, QRadialGradient
 from PySide6.QtWidgets import QApplication, QWidget
 
-TICK_MS = 16
+# 粒子层刷新周期。特效只是气氛，30fps 完全够看；原来 16ms(62fps) 在全屏透明
+# 窗口上纯粹烧 CPU —— 实测同样一场烟花 53% → 32% 一个核。
+TICK_MS = 33
 
 
 @dataclass
@@ -74,6 +76,9 @@ class EffectLayer(QWidget):
         self.particles: list[Particle] = []
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._tick)
+        # 上一帧画过的区域：粒子会移动，只重画新位置会留下残影，所以要和
+        # 上一帧的区域求并集再交给 Qt，避免整块全屏重绘。
+        self._dirty = QRect()
         self._emoji_font = QFont("Segoe UI Emoji", 18)
         self._follow: QWidget | None = None
         self.hide()
@@ -218,6 +223,7 @@ class EffectLayer(QWidget):
         dt = TICK_MS / 1000.0
         alive: list[Particle] = []
         h = self.height()
+        dirty = QRect()
         for p in self.particles:
             p.life -= dt
             if p.life <= 0:
@@ -235,11 +241,16 @@ class EffectLayer(QWidget):
             if p.y > h + 80 or p.x < -120 or p.x > self.width() + 120:
                 continue
             alive.append(p)
+            r = p.size * (3.0 if p.kind == "flash" else 1.8) + 14
+            dirty = dirty.united(QRect(int(p.x - r), int(p.y - r),
+                                       int(r * 2), int(r * 2)))
         self.particles = alive
         if not self.particles:
+            self._dirty = QRect()
             self.stop_if_idle()
             return
-        self.update()
+        self.update(dirty.united(self._dirty))
+        self._dirty = dirty
 
     def paintEvent(self, _) -> None:
         if not self.particles:
