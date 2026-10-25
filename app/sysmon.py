@@ -103,6 +103,12 @@ class Snapshot:
 class Monitor:
     """后台采样器。"""
 
+    # 进程 Top5 是全套采样里最贵的一项：要挨个 OpenProcess 读 cpu_times /
+    # 内存，400 多个进程的机器上单次要 1.5 秒左右。开着 2 秒一轮的定时器
+    # 就会让监控线程几乎一直满负荷（实测空转吃掉约 60% 一个核），桌宠跟着卡。
+    # 所以它只在体检面板真的可见时才采，而且 6 秒一次就够看了。
+    TOP_PROC_REFRESH = 6.0
+
     def __init__(self, interval: float = 2.0):
         self.interval = interval
         self._lock = threading.Lock()
@@ -112,20 +118,20 @@ class Monitor:
         self._last_net: tuple[float, float, float] | None = None
         self._disk_cache: list[DiskInfo] = []
         self._disk_ts = 0.0
+        # 体检面板打开时置 True；其余时间 Top5 用上一次缓存，不重复采
+        self.top_procs_enabled = False
+        self._top_cpu: list[ProcInfo] = []
+        self._top_mem: list[ProcInfo] = []
+        self._top_ts = 0.0
+        self._warmed = False
 
     # ---------- 生命周期 ----------
     def start(self) -> None:
         if self._thread is not None:
             return
+        # 预热都放在采样线程里做（见 _run）。这里不要再扫一遍进程表：
+        # 这台机器上扫一次要 1~2 秒，会挡在调用方（启动流程）身上。
         psutil.cpu_percent(interval=None)  # 第一次调用总是 0，先预热
-        try:  # 进程 CPU 百分比也是基于两次采样的差值，先预热一遍
-            for p in psutil.process_iter(["name"]):
-                try:
-                    p.cpu_percent(None)
-                except Exception:
-                    pass
-        except Exception:
-            pass
         self._thread = threading.Thread(target=self._run, daemon=True, name="sysmon")
         self._thread.start()
 
@@ -142,9 +148,26 @@ class Monitor:
 
     # ---------- 采样 ----------
     def _run(self) -> None:
-        # psutil 的 cpu_percent 状态是线程局部的，必须在采样线程里预热，
-        # 否则线程里的第一次调用永远是 0。
-        psutil.cpu_percent(interval=None)
+        # 先把一版便宜的快照发出去（CPU/内存/磁盘/网速都是毫秒级），界面立刻
+        # 有数字；进程相关那部分很贵，放到后面慢慢补。
+        # 注意 psutil.cpu_percent 的首次调用恒为 0，所以这里要重试到读出真值
+        # 再发布——否则界面会先显示 0%，自检也会判成"数据不完整"。
+        best = None
+        for _ in range(10):
+            try:
+                best = self._sample()
+            except Exception as exc:
+                print("[sysmon] 首帧采样失败:", exc)
+                break
+            if best.cpu > 0:
+                break
+            time.sleep(0.1)
+        if best is not None:
+            with self._lock:
+                self._snap = best
+
+        # psutil 的进程 cpu_percent 是「两次采样的差值」，第一次永远 0。
+        # 在采样线程里预热一遍，后面 Top5 的 CPU 列才是真的。
         try:
             for p in psutil.process_iter(["name"]):
                 try:
@@ -153,6 +176,7 @@ class Monitor:
                     pass
         except Exception:
             pass
+
         while not self._stop.is_set():
             try:
                 snap = self._sample()
@@ -163,6 +187,15 @@ class Monitor:
                 continue
             with self._lock:
                 self._snap = snap
+            if not self._warmed:
+                # 预热一次进程榜：这样第一次打开体检面板就有数据，不用干等
+                # 下一轮采样（这台机器上扫一遍要 1.6 秒）。
+                self._warmed = True
+                try:
+                    self._top_cpu, self._top_mem = _top_procs()
+                    self._top_ts = time.monotonic()
+                except Exception:
+                    pass
             if self._stop.wait(self.interval):
                 break
 
@@ -219,8 +252,22 @@ class Monitor:
         except Exception:
             s.uptime_h = 0.0
 
-        s.top_cpu, s.top_mem = _top_procs()
+        s.top_cpu, s.top_mem = self._sample_top_procs(now)
         return s
+
+    def _sample_top_procs(self, now: float) -> tuple[list[ProcInfo], list[ProcInfo]]:
+        """按需刷新进程 Top5，其余时间返回缓存（没开面板就是空列表）。"""
+        if not self.top_procs_enabled:
+            return self._top_cpu, self._top_mem
+        if now - self._top_ts < self.TOP_PROC_REFRESH and (self._top_cpu or self._top_mem):
+            return self._top_cpu, self._top_mem
+        try:
+            top_cpu, top_mem = _top_procs()
+        except Exception:
+            return self._top_cpu, self._top_mem
+        self._top_cpu, self._top_mem = top_cpu, top_mem
+        self._top_ts = now
+        return top_cpu, top_mem
 
 
 # ---------------- 内部工具 ----------------

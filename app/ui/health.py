@@ -288,10 +288,13 @@ class HealthPanel(QWidget):
 
     def showEvent(self, e) -> None:
         super().showEvent(e)
+        # 进程 Top5 采集很贵，只有面板真的在屏幕上时才打开
+        self.monitor.top_procs_enabled = True
         self.refresh()
         self.timer.start(1000)
 
     def hideEvent(self, e) -> None:
+        self.monitor.top_procs_enabled = False
         self.timer.stop()
         super().hideEvent(e)
 

@@ -15,7 +15,14 @@ from app.ui.health import HealthPanel
 
 m = Monitor(interval=0.3)
 m.start()
-time.sleep(2.5)
+# 采样在后台线程里：先出便宜指标，进程榜要枚举整张进程表（这台机器上要
+# 一两秒）。等数据真的到位再截图，别用固定 sleep 赌时间。
+deadline = time.time() + 12
+while time.time() < deadline:
+    snap = m.snapshot
+    if snap.ts > 0 and len(snap.top_cpu) > 0:
+        break
+    time.sleep(0.2)
 
 panel = HealthPanel(m)
 panel.show()
