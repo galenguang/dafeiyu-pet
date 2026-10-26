@@ -1,5 +1,10 @@
 # 大肥鱼桌宠 🐋 · v2.0
 
+> **本仓库是副本，不是原作者仓库。**
+> 代码来自 [star211199/dafeiyu-pet](https://github.com/star211199/dafeiyu-pet)（作者 Albot），按 MIT 分发；
+> 动画素材版权归 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet)（PC2005-cloud）所有，**仅限非商用**。
+> 详见 [NOTICE](NOTICE) 与 [LICENSE](LICENSE)。下载、提 issue、更新请优先去上游仓库。
+
 一只陪你摸鱼的 DeepSeek 鲸鱼娘桌宠。透明无边框、置顶、可拖拽，**默认只在屏幕右下角小范围活动，不挡你办公**。
 
 **Not just a pet.** v2.0 起她开始记事，也开始能帮你动手。
@@ -472,4 +477,9 @@ flutter build apk --release
 
 ## 协议
 
-MIT（仅代码；动画素材版权归 dsh-pet 作者，请遵循其协议，勿商用）
+- **代码**：MIT，版权归原作者 Albot（[star211199](https://github.com/star211199)），许可全文见 [LICENSE](LICENSE)。
+- **动画素材**：版权归 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet) 作者 PC2005-cloud，**仅限非商用**，不在 MIT 范围内。
+- **角色形象**：DeepSeek「鲸鱼娘 · 大肥鱼」二创，版权归原作者／权利方，与本项目无官方关联。
+
+本仓库只是副本，整体按「非商用」分发；商用请分别联系代码与素材的权利人。
+许可边界的完整说明见 [NOTICE](NOTICE)。
